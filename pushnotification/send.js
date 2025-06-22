@@ -12,12 +12,22 @@ async function sendNotification() {
   try {
     const response = await admin.messaging().sendEachForMulticast({
       tokens: [
-        "dbSr8sKbRFipVaY5Illa4X:APA91bEshf8SVeHPLf_HwT9gmMqyaJaprSzFFwfP0eYl3LA50mDYolFs5yR4Zfib5fuDaT6M9pfgUEvze4ZnBriXjAEHohp1rPjvmsfSrK6eRpBegDmJfHI",
+        "emCVsBM3RCGihK8vLrLyAr:APA91bEsry6MO_p4oYktq0FyPYPrBGMRGMkZ56KmnX5AnBMt5pWQopV5uRliPX7Wl81GAJEQSov2b3tpEAevVQPvcf6Rn2F72j6lV6iWd6hIKRTcbp21DDg",
       ], // 🔁 Replace with real FCM tokens
-      notification: {
+      data: {
         title: "Weather Warning!",
+        imageUrl: "https://my-cdn.com/extreme-weather.png", // Fixed URL
         body: "A new weather warning has been issued for your location.",
-        imageUrl: "https://my-cdn.com/extreme-weather.png",
+      },
+      android: {
+        priority: "high",
+      },
+      apns: {
+        headers: {
+          "apns-push-type": "background",
+          "apns-priority": "5", // Must be `5` when `contentAvailable` is set to true.
+          "apns-topic": "io.flutter.plugins.firebase.messaging", // bundle identifier
+        },
       },
     });
 
