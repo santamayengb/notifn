@@ -1,11 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:notifn/firebase/firebase.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseNotificationConfig.fcmInitial();
   runApp(MyApp());
 }
 
@@ -32,10 +34,21 @@ class NotificationHomeState extends State<NotificationHome> {
   void initState() {
     super.initState();
 
+    print("sdasdasdsd");
+
     _messaging.requestPermission();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Message received in foreground: ${message.notification?.title}");
+      final title = message.notification?.title ?? 'Notification';
+      final body = message.notification?.body ?? '';
+
+      // Show Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$title: $body'),
+          duration: Duration(seconds: 5),
+        ),
+      );
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -49,6 +62,8 @@ class NotificationHomeState extends State<NotificationHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Push Notification Home')));
+    return Scaffold(
+      body: Center(child: Text('Push Notifdgdfgdfgdfgfication Home')),
+    );
   }
 }
